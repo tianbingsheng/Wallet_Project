@@ -16,6 +16,7 @@ function unlockAccountWithPrivatekey(){
     });
 }
 
+//解锁完成以后对账户进行设置数据
 function configAccountInfo(data) {
     //将服务端返回的账户信息显示到页面
     $("#account-address").text(data.address);
@@ -28,11 +29,11 @@ function configAccountInfo(data) {
 
     //解锁完账户以后,就要将本账户的私钥以及账户地址赋值到转账的隐藏表单当中
 
-    $("input[name=formaddress]").text(data.address);
-    $("input[name=privatekey]").text(data.privatekey);
+    $("input[name=fromaddress]").val(data.address);
+    $("input[name=privatekey]").val(data.privatekey);
 }
 
-
+//通过keystore进行解锁账户
 function unlockAccountWithKeystore(){
 
     //首先判断有没有选择文件
@@ -122,6 +123,12 @@ $(document).ready(function () {
                 dataType:"json",
                 success:function (res, status) {
                     console.log(status+JSON.stringify(res));
+
+                    if (res.code == 0){
+                        $("#transaction-complete-hash").text(res.data.transactionHash);
+                        $("#transaction-complete-blockhash").text(res.data.blockHash);
+                        $("#transaction-complete").show();
+                    }
                 },
                 error:function (res, status) {
                     console.log(status + JSON.stringify(res))
@@ -131,3 +138,42 @@ $(document).ready(function () {
     })
 
 });
+
+function checkTransaction() {
+    let hash = $("#transaction-info-hash").val();
+    console.log(hash);
+
+    $.post("/checktransaction","hash=" +hash,function (data,status) {
+          console.log(status,JSON.stringify(data))
+
+        if (data.code == 0){
+            //格式化操作
+            $("#transaction-info").text(JSON.stringify(data.data,null,4));
+        }
+
+    });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

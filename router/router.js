@@ -22,4 +22,8 @@ router.post("/privateunlock",accountController.unlockAccountWithPrivate);
 //通过keystore配置文件解锁账户
 router.post("/keystoreunlock",accountController.unlockAccountWithKeystore);
 
+//查看交易详情
+router.post("/checktransaction",transactionController.checkTransaction);
+router.get("/checktransaction",transactionController.checkTransactionHtml);
+
 module.exports = router ;
