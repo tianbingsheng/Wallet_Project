@@ -24,6 +24,12 @@ function configAccountInfo(data) {
     //隐藏
     $("#transaction-first").hide();
     $("#transaction-second").show();
+
+
+    //解锁完账户以后,就要将本账户的私钥以及账户地址赋值到转账的隐藏表单当中
+
+    $("input[name=formaddress]").text(data.address);
+    $("input[name=privatekey]").text(data.privatekey);
 }
 
 
@@ -80,9 +86,48 @@ $(document).ready(function () {
             $("#unlock-account-keystore").show();
             $("#unlock-account-privatekey").hide();
         }else{
-            $("#unlock-account-keystore").hide()
+            $("#unlock-account-keystore").hide();
             $("#unlock-account-privatekey").show();
         }
+    });
 
+    //转账
+    $("#send-transaction-form").validate({
+        //rules需要验证的字段,验证表单的操作
+        rules:{
+            toaddress:{
+                required: true,
+            },
+            number:{
+                required:true,
+            },
+        },
+        messages:{
+            toaddress:{
+                required:"请输入对方地址",
+            },
+            number:{
+                required:"请输入转账数额"
+            },
+        },
+
+        submitHandler: function(form)
+        {
+            var urlStr = "/sendtransaction";
+            alert("urlStr:"+urlStr);
+
+            $(form).ajaxSubmit({
+                url:urlStr,
+                type:"post",
+                dataType:"json",
+                success:function (res, status) {
+                    console.log(status+JSON.stringify(res));
+                },
+                error:function (res, status) {
+                    console.log(status + JSON.stringify(res))
+                }
+            });
+        }
     })
+
 });

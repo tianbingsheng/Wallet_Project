@@ -43,7 +43,7 @@
             <div id="transaction-second" style="display: none">
 
                 <div id="send-transaction">
-                    <form method="post">
+                    <form id="send-transaction-form">
                         <div>
                             <span>对方地址</span>
                             <input type="text" name="toaddress">
@@ -54,8 +54,8 @@
                             <input type="text" name="number">
                         </div>
 
-                        <input name="fromaddress">
-                        <input name="privatekey">
+                        <input name="fromaddress" style="display: none">
+                        <input name="privatekey" hidden="hidden">
 
                         <button type="submit">发送交易</button>
                     </form>

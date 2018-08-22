@@ -23,7 +23,8 @@ module.exports = {
         //返回响应的数据给前端
         responseData = myUtils.success({
             balance : balance,
-            address : account.address
+            address : account.address,
+            privatekey : account.privateKey
         });
 
         ctx.body = responseData;
@@ -54,7 +55,9 @@ module.exports = {
         //6.返回响应的数据给前端
         responseData = myUtils.success({
             balance : balance,
-            address : account.address
+            address : account.address,
+            privatekey : account.privateKey
+
         });
 
         ctx.body = responseData ;
