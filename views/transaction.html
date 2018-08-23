@@ -52,6 +52,10 @@
                         <div>
                             <span>发送金额</span>
                             <input type="text" name="number">
+                            <select id="send-transaction-token-type">
+                                <option value="1">ETH</option>
+                                <option id="send-transaction-token-symbol" value="2"></option>
+                            </select>
                         </div>
 
                         <input name="fromaddress" style="display: none">
@@ -70,6 +74,9 @@
 
                     <div>
                         <span>账户余额:  <span id="account-balance"> </span></span>
+                        <br>
+                        <span>Token余额:</span>
+                        <span id="account-token-info"></span>
                     </div>
 
                 </div>

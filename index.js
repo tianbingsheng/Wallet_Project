@@ -25,5 +25,5 @@ app.use(views(path.join(__dirname,"views"),{extension:"ejs",map:{html:"ejs"}}));
 
 //路由要放到后面
 app.use(router.routes());
-console.log("正在监听3000端口");
-app.listen(3000);
+console.log("正在监听8888端口");
+app.listen(8888);

@@ -7,7 +7,7 @@ function unlockAccountWithPrivatekey(){
     let privatekey = $("#input-privatekey").val();
     console.log(privatekey);
     $.post("/privateunlock",`privatekey=${privatekey}`,function (res,status) {
-        console.log(status+JSON.stringify(res))
+        console.log(status+JSON.stringify(res));
 
         if (res.code == 0){
             //将服务端返回的账户信息显示到页面
@@ -31,6 +31,9 @@ function configAccountInfo(data) {
 
     $("input[name=fromaddress]").val(data.address);
     $("input[name=privatekey]").val(data.privatekey);
+
+    $("#account-token-info").text(data.tokenbalance +""+data.symbol);
+    $("#send-transaction-token-symbol").text(data.symbol);
 }
 
 //通过keystore进行解锁账户
@@ -39,7 +42,7 @@ function unlockAccountWithKeystore(){
     //首先判断有没有选择文件
     var filedata = $("#unlock-accout-file").val();
     if (filedata.length <= 0) {
-        alert("请选择文件!")
+        alert("请选择文件!");
         return
     }
 
@@ -65,18 +68,12 @@ function unlockAccountWithKeystore(){
                 //将服务端返回的账户信息显示到页面
                 configAccountInfo(res.data)
             }
-
         },
-
         error: function (res, status) {
             alert(JSON.stringify(res)+status)
         }
     })
-
-
 }
-
-
 
 //所有文档加载完成以后
 $(document).ready(function () {
@@ -114,8 +111,13 @@ $(document).ready(function () {
 
         submitHandler: function(form)
         {
-            var urlStr = "/sendtransaction";
-            alert("urlStr:"+urlStr);
+            var urlStr
+            let tokenType = $("#send-transaction-token-type").val();
+            if (tokenType == 1){
+                urlStr = "/sendtransaction";
+            }else{
+                urlStr = "/sendtoken";
+            }
 
             $(form).ajaxSubmit({
                 url:urlStr,
@@ -144,7 +146,7 @@ function checkTransaction() {
     console.log(hash);
 
     $.post("/checktransaction","hash=" +hash,function (data,status) {
-          console.log(status,JSON.stringify(data))
+          console.log(status,JSON.stringify(data));
 
         if (data.code == 0){
             //格式化操作

@@ -2,6 +2,7 @@ let router = require('koa-router')();
 let newAccountController = require("../controllers/newAccount");
 let transactionController = require("../controllers/tracsaction");
 let accountController = require("../controllers/account");
+let tokenController = require("../controllers/token");
 
 // router.get("/newaccount",(ctx,next)=>{
 //     ctx.body = "创建钱包";    //koa-router这个模块,会自动调用next(),所以不用人为去调用
@@ -26,4 +27,6 @@ router.post("/keystoreunlock",accountController.unlockAccountWithKeystore);
 router.post("/checktransaction",transactionController.checkTransaction);
 router.get("/checktransaction",transactionController.checkTransactionHtml);
 
+//token转账
+router.post("/sendtoken",tokenController.sendTokenTransaction);
 module.exports = router ;

@@ -2,11 +2,39 @@
 let web3 = require('../utils/myUtils').getweb3();
 let fs = require('fs');
 let myUtils = require('../utils/myUtils');
+let myContract = require("../models/contract").getContract();
 
 async  function getAccountBalance(address){
     let balance = await web3.eth.getBalance(address);
 
     return web3.utils.fromWei(balance, 'ether');
+}
+
+//配置返回给前端的数据,包含以太币的数据以及token的数据
+async  function setResponseData(account){
+    //3.获取账户余额
+    let balance  = await  getAccountBalance(account.address);
+    console.log(balance);
+
+
+    //代币余额
+    let myBalance = await  myContract.methods.balanceOf(account.address).call();
+    //获取代币的小数位
+    let decimals = await myContract.methods.decimals().call();
+    //后端换算Token的单位
+    myBalance = myBalance / Math.pow(10,decimals);
+    //获取代币的简称
+     let symbol = await myContract.methods.symbol().call();
+
+    //返回响应的数据给前端
+    responseData = myUtils.success({
+        balance : balance,
+        address : account.address,
+        privatekey : account.privateKey,
+        tokenbalance : myBalance,
+        symbol : symbol
+    });
+    return responseData;
 }
 module.exports = {
     unlockAccountWithPrivate : async (ctx)=>{
@@ -17,17 +45,8 @@ module.exports = {
         //2.通过web3接口,根据私钥进行解锁账户,获得账户对象;
         let account = web3.eth.accounts.privateKeyToAccount(privatekey);
         console.log(account);
-        //3.获取账户余额
-        let balance  = await  getAccountBalance(account.address);
-        console.log(balance);
-        //返回响应的数据给前端
-        responseData = myUtils.success({
-            balance : balance,
-            address : account.address,
-            privatekey : account.privateKey
-        });
-
-        ctx.body = responseData;
+        //将账户信息返回给前端
+        ctx.body = await setResponseData(account)
     },
 
     unlockAccountWithKeystore:async (ctx)=>{
@@ -53,14 +72,7 @@ module.exports = {
         console.log(balance);
 
         //6.返回响应的数据给前端
-        responseData = myUtils.success({
-            balance : balance,
-            address : account.address,
-            privatekey : account.privateKey
-
-        });
-
-        ctx.body = responseData ;
+        ctx.body = await setResponseData(account);
 
     }
 };
